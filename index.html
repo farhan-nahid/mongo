@@ -22,14 +22,15 @@
         fetch("/product")
           .then((res) => res.json())
           .then((product) => {
-            console.log(product);
+            //    console.log(product);
             const container = document.getElementById("product");
+            container.innerHTML = "";
 
             product.forEach((pd) => {
               const p = document.createElement("p");
               p.innerHTML = `Name : ${pd.name}----- Price : ${pd.price}------- Quantity : ${pd.quantity} 
               <button onclick="updateProduct('${pd._id}')">Update</button>
-              <button onclick="deleteProduct('${pd._id}')">Delete</button>
+              <button onclick="deleteProduct(event, '${pd._id}')">Delete</button>
               
               `;
               container.appendChild(p);
@@ -52,7 +53,8 @@
           });
       }
 
-      function updateProductValue() {
+      function updateProductValue(id) {
+        //  console.log("hit inside");
         const price = document.getElementById("price").value;
         const quantity = document.getElementById("quantity").value;
         const product = { id, price, quantity };
@@ -62,18 +64,27 @@
           body: JSON.stringify(product),
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then((result) => {
             console.log("updated");
+            if (result) {
+              loadProduct();
+              const update = document.getElementById("update");
+              update.innerHTML = "";
+            }
           });
       }
 
-      function deleteProduct(id) {
+      function deleteProduct(event, id) {
+        //  console.log(event.target);
         fetch(`/delete/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then((result) => {
-            console.log("deleted");
+            // console.log("deleted");
+            if (result) {
+              event.target.parentNode.style.display = "none";
+            }
           });
       }
     </script>

@@ -41,18 +41,19 @@ client.connect(err => {
       const product = req.body;
       productCollection.insertOne(product)
         .then(result =>{
-            console.log("data added");
-            res.send("scucesss")
+          //  console.log("data added");
+            res.redirect('/')
         })
   })
 
   app.patch('/update/:id' , (req, res) =>{
-    productCollection.updateOne({_id:ObjectId(req.params.id)}
+  //  console.log(req.body.price);
+    productCollection.updateOne({_id:ObjectId(req.params.id)},
     {
         $set:{price: req.body.price, quantity: req.body.quantity}
     })
     .then(  result=>{
-        console.log(result);
+        res.send(result.matchedCount > 0)
     })
   })
 
@@ -60,7 +61,7 @@ client.connect(err => {
       console.log(req.params.id);
        productCollection.deleteOne({_id:ObjectId(req.params.id)})
        .then(  result =>{
-           console.log(result);
+           res.send(result.deletedCount > 0)
       })
   })
 
